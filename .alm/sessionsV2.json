@@ -18,30 +18,15 @@
             "additionalData": null
           },
           {
-            "id": "8a2d4bbb-10c2-4e37-8c89-af02ed40181b",
-            "relativeUrl": "file://./src/components/GameObject.tsx",
-            "additionalData": null
-          },
-          {
-            "id": "ee2934aa-5bce-45a7-8508-fbe2ca4e2ec8",
-            "relativeUrl": "file://./src/components/GameComponent.tsx",
-            "additionalData": null
-          },
-          {
-            "id": "5caeff32-c6b4-47d4-99d8-1fec68d7fffe",
-            "relativeUrl": "file://./src/components/GameEvent.tsx",
-            "additionalData": null
-          },
-          {
-            "id": "60db891e-2d95-43cc-b259-b5ec0d5f005c",
-            "relativeUrl": "file://./src/components/game-components/Physics.tsx",
+            "id": "c23b5fd1-7515-46fa-82ec-6d9a7d2373a1",
+            "relativeUrl": "file://./public/index.html",
             "additionalData": null
           }
         ],
         "subItems": [],
         "activeItemIndex": 0
       },
-      "lastUsed": 1497882683924,
+      "lastUsed": 1498126733613,
       "selectedTabId": "d53f2e19-7ebc-4452-8d5a-b62a7b82f1ed",
       "errorsExpanded": false
     }
