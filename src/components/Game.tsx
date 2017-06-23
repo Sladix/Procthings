@@ -131,7 +131,6 @@ class Game extends React.Component<Props, State> {
     this.setState({ won: true });
     this.level++;
     this.Runner.stop(this._runner);
-    console.log("ok");
   }
 
   generate() {
@@ -159,8 +158,9 @@ class Game extends React.Component<Props, State> {
     var self = this;
     let space = 10;
     let objDiam = 40;
-    let cols = Math.floor((this.worldWidth - 100) / (objDiam + space));
-    cols = level;
+    let maxcols = Math.floor((this.worldWidth - 100) / (objDiam + space));
+    let cols = level;
+    cols = Math.min(cols, maxcols);
     var x = this.worldWidth / 2 - ((cols*(objDiam+space))/2);
     let stack = this.Composites.stack(x, 50, cols, rows, space, space, function(x: number, y: number) {
       return self.getEnemy(x, y, objDiam / 2);
@@ -289,12 +289,12 @@ class Game extends React.Component<Props, State> {
 
     this.Events.on(this._engine, 'collisionEnd', function(event: any) {
       event.pairs.forEach((p: any) => {
-        if (p.bodyA.collisionFilter.category === self.sprinkleCategory) {
-          if (p.bodyB.collisionFilter.category === self.bulletCategory) {
+        if (p.bodyB.collisionFilter.category === self.bulletCategory){
+           if (p.bodyA.collisionFilter.category === self.sprinkleCategory) {
             self.sparkles(p.bodyA.position);
-            self.World.remove(self._world, p.bodyB);
             self.Composite.remove(self.stack, p.bodyA);
-          }
+           }
+          self.World.remove(self._world, p.bodyB);
         }
       });
     });
@@ -379,7 +379,7 @@ class Game extends React.Component<Props, State> {
   render() {
     let message = null;
     if (this.state.won) {
-      message = <h3>Bien joué ma couille !! <button onClick={this.resetGame.bind(this)}>Recommencer</button></h3>
+      message = <h3>Bien joué ma couille !! <button onClick={this.resetGame.bind(this)}>Continuer</button></h3>
     }
     return (
       <div>
