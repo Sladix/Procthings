@@ -1,6 +1,8 @@
 import GameEvent from './GameEvent';
 import GameComponent from './GameComponent';
+// Composants
 import Physics from './game-components/Physics';
+import SlingshotControl from './game-components/SlingshotControl';
 
 class GameObject{
   components: GameComponent[];
@@ -31,17 +33,18 @@ class GameObjectFactory{
   }
   loadBluePrints(){
     this.componentList = {
-      Physics
+      Physics,SlingshotControl
     };
     this.blueprints = {
       human:{
-        components:[
-          { name:'Physics', params : { weight : 10, size : 150} }
+        components: [
+          { name: 'Physics', params: { size: 10, type: 'circle', position: [0, 0] } },
+          { name:'SlingshotControl', params : {} }
         ]
       } 
     };
   }
-  createFromBluePrint(name: string){
+  createFromBluePrint(name: string , options ?:object){
     if( !this.blueprints[name] )
     {
       console.log(name+' blueprint does not exist');
@@ -52,6 +55,13 @@ class GameObjectFactory{
       if( !this.componentList[c.name] ){
         console.log('Component ' + c.name + ' does not exist');
         return null;
+      }
+      if (options) {
+        for (let i in c.params) {
+          if (options[i]) {
+            c.params[i] = options[i];
+          }
+        }
       }
       var comp = new this.componentList[c.name](c.params,c.name,o);
       o.components.push(comp);

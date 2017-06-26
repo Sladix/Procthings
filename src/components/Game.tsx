@@ -1,6 +1,8 @@
 import * as React from 'react';
 var Matter = require('matter-js');
 import { GameObject, GameObjectFactory } from './GameObject';
+import GameEvent from './GameEvent';
+
 interface Props { }
 interface State { }
 class Game extends React.Component<Props, State> {
@@ -31,73 +33,66 @@ class Game extends React.Component<Props, State> {
   componentDidMount() {
     this.gof = new GameObjectFactory();
     this.initGame();
-    this.addBodies();
+    this.addGameObjects();
     this.initControls();
-  }
+  };
 
-  addBodies() {
-    let group = this.Body.nextGroup(true);
-    var self = this;
-    let bridge = this.Composites.stack(150, 300, 9, 1, 10, 10, function(x : number, y : number) {
-        return self.Bodies.rectangle(x, y, 50, 20, { collisionFilter: { group: group } });
+  addGameObjects() {
+    let h = this.gof.createFromBluePrint('human', { position: [document.documentElement.clientWidth / 2, 300] });
+    this.gameObjects.push(h as GameObject);
+    this.gameObjects.forEach((g: GameObject)=>{
+      g.fireEvent(new GameEvent('generate', { _world: this._world }));
     });
     
-    this.Composites.chain(bridge, 0.5, 0, -0.5, 0, { stiffness: 0.9 });
     
-    let stack = this.Composites.stack(200, 40, 6, 3, 0, 0, function(x: number, y: number) {
-        return self.Bodies.polygon(x, y, Math.round(self.Common.random(1, 8)), self.Common.random(20, 40));
-    });
-
-    this.World.add(this._world, [
-        bridge,
-        this.Bodies.rectangle(80, 440, 120, 280, { isStatic: true }),
-        this.Bodies.rectangle(720, 440, 120, 280, { isStatic: true }),
-        this.Constraint.create({ pointA: { x: 140, y: 300 }, bodyB: bridge.bodies[0], pointB: { x: -25, y: 0 } }),
-        this.Constraint.create({ pointA: { x: 660, y: 300 }, bodyB: bridge.bodies[8], pointB: { x: 25, y: 0 } }),
-        stack
-    ]);
-  }
+  };
 
   initControls() {
     // add mouse control
-    this._mouse = this.Mouse.create(this._render.canvas);
-    this._mouseConstraint = this.MouseConstraint.create(this._engine, {
-            mouse: this._mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: {
-                    visible: false
-                }
-            }
-        });
+    // this._mouse = this.Mouse.create(this._render.canvas);
+    // this._mouseConstraint = this.MouseConstraint.create(this._engine, {
+    //         mouse: this._mouse,
+    //         constraint: {
+    //             stiffness: 0.2,
+    //             render: {
+    //                 visible: false
+    //             }
+    //         }
+    //     });
 
-    this.World.add(this._world, this._mouseConstraint);
+    // this.World.add(this._world, this._mouseConstraint);
 
-    // keep the mouse in sync with rendering
-    this._render.mouse = this._mouse;
+    // // keep the mouse in sync with rendering
+    // this._render.mouse = this._mouse;
 
-    this.Render.lookAt(this._render, {
-        min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
-    });
+    // this.Render.lookAt(this._render, {
+    //     min: { x: 0, y: 0 },
+    //     max: { x: 800, y: 600 }
+    // });
   }
 
   initGame() {
-    this._engine = this.Engine.create();
-    this._world = this._engine.world;
+    this._world = this.World.create({
+      gravity: {
+        x: 0,
+        y: 0
+      }
+    });
+    this._engine = this.Engine.create({ world: this._world });
+    
     this._render = this.Render.create({
         element: this.renderElement,
         engine: this._engine,
         options: {
-            width: Math.min(document.documentElement.clientWidth, 800),
+            width: document.documentElement.clientWidth,
             height: Math.min(document.documentElement.clientHeight, 600),
-            showAngleIndicator: true
+            showAngleIndicator: false
         }
     });
     this.Render.run(this._render);
     this._runner = this.Runner.create();
     this.Runner.run(this._runner, this._engine);
-
+    this.gameObjects = [];
   }
   render() {
     return (
