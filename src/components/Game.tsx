@@ -143,7 +143,7 @@ class Game extends React.Component<Props, State> {
     return this.Bodies.circle(x, y, size, {
         render: {
           sprite: {
-            texture: '/booty.png'
+            texture: './booty.png'
           }
         },
         isStatic: true,
@@ -178,7 +178,7 @@ class Game extends React.Component<Props, State> {
       },
       render: {
         sprite: {
-            texture: '/player.png'
+            texture: './player.png'
         }
       }
     });
@@ -281,9 +281,9 @@ class Game extends React.Component<Props, State> {
         self.playDelay--;
       }
       if (self.canPlay) {
-        self.bonhomme.render.sprite.texture = '/player.png';
+        self.bonhomme.render.sprite.texture = './player.png';
       } else {
-        self.bonhomme.render.sprite.texture =  '/player_test.png';
+        self.bonhomme.render.sprite.texture =  './player_test.png';
       }
     });
 
